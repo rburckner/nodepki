@@ -57,7 +57,7 @@ new Promise(function(resolve, reject) {
      */
     if(fs.existsSync(global.paths.datapath + 'config/config.yml')) {
         log.info("Reading config file data/config/config.yml ...");
-        global.config = yaml.safeLoad(fs.readFileSync(global.paths.datapath + 'config/config.yml', 'utf8'));
+        global.config = yaml.load(fs.readFileSync(global.paths.datapath + 'config/config.yml', 'utf8'));
 
         /*
          * Check if the openssl command is available

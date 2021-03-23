@@ -5,8 +5,8 @@
 
 var log = require('fancy-log');
 
-var Ajv = require('ajv');
-var ajv = Ajv({allErrors: true});
+var Ajv = require('ajv').default;
+var ajv = new Ajv({allErrors: true});
 
 
 var validator = {};

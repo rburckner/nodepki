@@ -9,7 +9,7 @@ var util = require('util');
 var fs = require('fs-extra');
 var exec = require('child_process').exec;
 
-const uuidV4 = require('uuid/v4');
+const uuidV4 = require('uuid').v4;
 var log = require('fancy-log');
 
 var certdb = require('../certdb.js');
