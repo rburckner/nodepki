@@ -9,9 +9,9 @@ var express = require('express')
 var bodyparser = require('body-parser')
 
 // Custom modules
-var certapi = require('./api/certificate.js')
-var caapi = require('./api/ca.js')
-var authapi = require('./api/auth.js')
+var certapi = require('./certificate.js')
+var caapi = require('./ca.js')
+var authapi = require('./auth.js')
 
 
 var apipath = '/api/v1';

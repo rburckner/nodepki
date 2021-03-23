@@ -9,7 +9,7 @@
     "pki",
     "ca"
   ],
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"There is no test.\" && exit 0;"
   },
