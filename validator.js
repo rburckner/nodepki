@@ -11,38 +11,36 @@ var ajv = new Ajv({allErrors: true});
 
 var validator = {};
 
-validator.checkAPI = function(schema, data) {
-    var valid = ajv.validate(schema, data);
+validator.checkAPI = function (schema, data) {
+  var valid = ajv.validate(schema, data);
 
-    if(valid) {
-        return { success: true };
-    } else {
-        var errors = [];
+  if (valid) {
+    return {success: true};
+  } else {
+    var errors = [];
 
-        ajv.errors.forEach(function(error) {
-            var message = '';
+    ajv.errors.forEach(function (error) {
+      var message = '';
 
-            switch(error.keyword) {
-                case 'required':
-                    // requirement not fulfilled.
-                    message = 'Property \'' + error.params.missingProperty + '\' is missing.';
-                    break;
-                case 'type':
-                    message = 'Wrong type: ' + error.dataPath + ' ' + error.message;
-                    break;
-                default:
-                    message = 'Unknown input error. :(';
-            }
+      switch (error.keyword) {
+        case 'required':
+          // requirement not fulfilled.
+          message = 'Property \'' + error.params.missingProperty + '\' is missing.';
+          break;
+        case 'type': message = 'Wrong type: ' + error.dataPath + ' ' + error.message;
+          break;
+        default: message = 'Unknown input error. :(';
+      }
 
-            var pusherror = {
-                message: message
-            }
+      var pusherror = {
+        message: message
+      }
 
-            errors.push(pusherror);
-        });
+      errors.push(pusherror);
+    });
 
-        return { success: false, errors: errors };
-    }
+    return {success: false, errors: errors};
+  }
 };
 
 
