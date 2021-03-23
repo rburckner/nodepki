@@ -1,14 +1,14 @@
-var fs = require('fs-extra')
+const fs = require('fs-extra')
 
-var publicpath = '/public'
+const publicpath = '/public'
 
 /**
  * Initializes API paths.
  */
-var initPublicDl = function (app) {
+const initPublicDl = function (app) {
   app.get(publicpath + '/ca/root/cert', function (req, res) {
-    var certificate = fs.readFileSync(global.paths.pkipath + 'root/root.cert.pem')
-    var filename = global.config.ca.root.commonname.replace(/\ /g, '_').toLowerCase()
+    const certificate = fs.readFileSync(global.paths.pkipath + 'root/root.cert.pem')
+    const filename = global.config.ca.root.commonname.replace(/\ /g, '_').toLowerCase()
 
     res.setHeader('Content-disposition', 'attachment; filename=' + filename + '.cert.pem');
     res.setHeader('Content-type', 'application/x-pem-file')
@@ -16,8 +16,8 @@ var initPublicDl = function (app) {
   });
 
   app.get(publicpath + '/ca/intermediate/cert', function (req, res) {
-    var certificate = fs.readFileSync(global.paths.pkipath + 'intermediate/intermediate.cert.pem')
-    var filename = global.config.ca.intermediate.commonname.replace(/\ /g, '_').toLowerCase()
+    const certificate = fs.readFileSync(global.paths.pkipath + 'intermediate/intermediate.cert.pem')
+    const filename = global.config.ca.intermediate.commonname.replace(/\ /g, '_').toLowerCase()
 
     res.setHeader('Content-disposition', 'attachment; filename=' + filename + '.cert.pem');
     res.setHeader('Content-type', 'application/x-pem-file')
@@ -25,8 +25,8 @@ var initPublicDl = function (app) {
   });
 
   app.get(publicpath + '/ca/intermediate/crl', function (req, res) {
-    var certificate = fs.readFileSync(global.paths.pkipath + 'intermediate/crl/crl.pem')
-    var filename = global.config.ca.intermediate.commonname.replace(/\ /g, '_').toLowerCase()
+    const certificate = fs.readFileSync(global.paths.pkipath + 'intermediate/crl/crl.pem')
+    const filename = global.config.ca.intermediate.commonname.replace(/\ /g, '_').toLowerCase()
 
     console.log(filename)
 

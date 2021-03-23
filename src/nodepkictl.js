@@ -2,17 +2,17 @@
  * NodePKI management tool
  */
 
-var log = require('fancy-log');
-var yargs = require('yargs');
+const log = require('fancy-log');
+const yargs = require('yargs');
 
-var auth = require('./auth.js');
+const auth = require('./auth.js');
 
 
 /**
  * Register subcommands
  */
-var argv = yargs.usage("Usage: $0 <subcommand> [options]").command("useradd", "Create a new API user", function (yargs) {
-  var argv = yargs.option('username', {
+const argv = yargs.usage("Usage: $0 <subcommand> [options]").command("useradd", "Create a new API user", function (yargs) {
+  const argv = yargs.option('username', {
     demand: true,
     describe: "Username for new user",
     type: "string"
@@ -28,7 +28,7 @@ var argv = yargs.usage("Usage: $0 <subcommand> [options]").command("useradd", "C
     log("Error: Username already exists!");
   }
 }).command("userdel", "Delete existing API user", function (yargs) {
-  var argv = yargs.option('username', {
+  const argv = yargs.option('username', {
     demand: true,
     describe: "Username for new user",
     type: "string"

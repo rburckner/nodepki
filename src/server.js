@@ -8,27 +8,27 @@
  * Loads config, prepares CertDB database, starts OCSP server, initializes and starts HTTP server and API.
  */
 
-var exec = require("child_process").exec;
-var util = require("util");
-var fs = require("fs-extra");
-var yaml = require("js-yaml");
-var log = require("fancy-log");
-var express = require("express");
-var figlet = require("figlet");
-var commandExists = require("command-exists").sync;
-var http = require("http");
-var bodyparser = require("body-parser");
+const exec = require("child_process").exec;
+const util = require("util");
+const fs = require("fs-extra");
+const yaml = require("js-yaml");
+const log = require("fancy-log");
+const express = require("express");
+const figlet = require("figlet");
+const commandExists = require("command-exists").sync;
+const http = require("http");
+const bodyparser = require("body-parser");
 const path = require("path");
 
-var api = require("./api");
-var publicDl = require("./publicDl.js");
-var certdb = require("./certdb.js");
-var ocsp = require("./ocsp-server.js");
-var crl = require("./crl.js");
-var fingerprint = require("./cert_fingerprint.js");
-var genpki = require("./genpki.js");
+const api = require("./api");
+const publicDl = require("./publicDl.js");
+const certdb = require("./certdb.js");
+const ocsp = require("./ocsp-server.js");
+const crl = require("./crl.js");
+const fingerprint = require("./cert_fingerprint.js");
+const genpki = require("./genpki");
 
-var app = express();
+const app = express();
 
 /***************
  * Start server *
@@ -130,12 +130,12 @@ new Promise(function (resolve, reject) {
          * Start HTTP server
          */ app.use("/api", bodyparser.json()); // JSON body parser for /api/ paths
 
-        var server = app.listen(
+        const server = app.listen(
           global.config.server.http.port,
           global.config.server.ip,
           function () {
-            var host = server.address().address;
-            var port = server.address().port;
+            const host = server.address().address;
+            const port = server.address().port;
 
             log.info(
               ">>>>>> HTTP server is listening on " +
@@ -178,7 +178,7 @@ new Promise(function (resolve, reject) {
     /*
      * CRL renewal cronjob
      */
-    var crlrenewint = 1000 * 60 * 60 * 24; // 24h
+    const crlrenewint = 1000 * 60 * 60 * 24; // 24h
     setInterval(crl.createCRL, crlrenewint);
 
     log("Server started.");
@@ -195,7 +195,7 @@ new Promise(function (resolve, reject) {
  * Server stop routine and events *
  *********************************/
 
-var stopServer = function () {
+const stopServer = function () {
   log("Received termination signal.");
   log("Stopping OCSP server ...");
   ocsp.stopServer();

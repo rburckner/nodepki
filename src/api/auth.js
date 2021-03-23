@@ -1,8 +1,8 @@
-var log = require('fancy-log');
-var validator = require('../validator.js');
-var authMod = require('../auth.js');
+const log = require('fancy-log');
+const validator = require('../validator.js');
+const authMod = require('../auth.js');
 
-var auth = {};
+const auth = {};
 
 
 /*
@@ -14,13 +14,13 @@ function respond(res, resobj) {
 
 
 function wrongAPISchema(apierrors, res) {
-  var errors = []
+  const errors = []
 
   apierrors.forEach(function (apierror) {
     errors.push({code: 100, message: apierror.message});
   });
 
-  var resobj = {
+  const resobj = {
     success: false,
     errors: errors
   }
@@ -30,7 +30,7 @@ function wrongAPISchema(apierrors, res) {
 
 
 auth.check = function (req, res) { // Validate user input
-  var schema = {
+  const schema = {
     "properties": {
       "auth": {
         "type": "object",
@@ -49,13 +49,13 @@ auth.check = function (req, res) { // Validate user input
   }
 
   // Check API conformity
-  var check = validator.checkAPI(schema, req.body)
+  const check = validator.checkAPI(schema, req.body)
   if (check.success === false) {
     wrongAPISchema(check.errors, res);
     return;
   }
 
-  var auth = req.body.auth;
+  const auth = req.body.auth;
 
   // Check access
   if (authMod.checkUser(auth.username, auth.password) === false) {

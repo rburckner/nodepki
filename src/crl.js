@@ -2,15 +2,15 @@
  * Creates CRL
  */
 
-var spawn = require("child_process").spawn;
-var log = require("fancy-log");
-var fs = require("fs-extra");
+const spawn = require("child_process").spawn;
+const log = require("fancy-log");
+const fs = require("fs-extra");
 const path = require("path");
 
 /*
  * Creates / updates CRL and overwrites old version.
  */
-var createCRL = function () {
+const createCRL = function () {
   crl = spawn(
     "openssl",
     ["ca", "-config", "openssl.cnf", "-gencrl", "-out", "crl/crl.pem"],

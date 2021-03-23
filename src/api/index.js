@@ -4,22 +4,22 @@
  */
 
 // 3rd party modules
-var fs = require('fs')
-var express = require('express')
-var bodyparser = require('body-parser')
+const fs = require('fs')
+const express = require('express')
+const bodyparser = require('body-parser')
 
 // Custom modules
-var certapi = require('./certificate.js')
-var caapi = require('./ca.js')
-var authapi = require('./auth.js')
+const certapi = require('./certificate.js')
+const caapi = require('./ca.js')
+const authapi = require('./auth.js')
 
 
-var apipath = '/api/v1';
+const apipath = '/api/v1';
 
 /**
  * Initializes API paths.
  */
-var initAPI = function (app) {
+const initAPI = function (app) {
   app.post(apipath + '/certificate/request/', function (req, res) {
     certapi.certificate.request(req, res);
   });

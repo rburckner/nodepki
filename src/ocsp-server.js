@@ -2,16 +2,16 @@
  * OCSP-Server via OpenSSL
  */
 
-var spawn = require("child_process").spawn;
-var log = require("fancy-log");
+const spawn = require("child_process").spawn;
+const log = require("fancy-log");
 const path = require("path");
 
-var ocsp;
+let ocsp;
 
 /**
  * Function starts OpenSSL server
  */
-var startServer = function () {
+const startServer = function () {
   return new Promise(function (resolve, reject) {
     log("Starting OCSP server ...");
 
@@ -66,7 +66,7 @@ var startServer = function () {
   });
 };
 
-var stopServer = function () {
+const stopServer = function () {
   ocsp.kill("SIGHUP");
   log("OCSP server stopped.");
 };

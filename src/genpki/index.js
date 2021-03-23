@@ -2,16 +2,16 @@
  * Script generates OpenSSL PKI based on the configuration in config.yml
  */
 
-var log = require("fancy-log");
-var fs = require("fs-extra");
-var yaml = require("js-yaml");
-var exec = require("child_process").exec;
+const log = require("fancy-log");
+const fs = require("fs-extra");
+const yaml = require("js-yaml");
+const exec = require("child_process").exec;
 const path = require("path");
 
 // Absolute pki base dir
 let pkidir = path.join(__dirname, "data", "pki");
 
-var PKIExists = function () {
+const PKIExists = function () {
   fs.ensureDir(pkidir);
 
   if (fs.existsSync(path.join(pkidir, "created"))) {
@@ -21,7 +21,7 @@ var PKIExists = function () {
   }
 };
 
-var createFileStructure = function () {
+const createFileStructure = function () {
   log(">>> Creating CA file structure");
 
   return new Promise(function (resolve, reject) {
@@ -42,7 +42,12 @@ var createFileStructure = function () {
     // Customize openssl.cnf and copy to root/
 
     openssl_root = fs.readFileSync(
-      path.join(__dirname, "/pkitemplate/openssl_root.cnf.tpl"),
+      path.join(
+        global.paths.basepath,
+        "src",
+        "pkitemplate",
+        "openssl_root.cnf.tpl"
+      ),
       "utf8"
     );
     openssl_root = openssl_root.replace(
@@ -93,7 +98,12 @@ var createFileStructure = function () {
     // Customize openssl.cnf and copy to root/
 
     openssl_intermediate = fs.readFileSync(
-      path.join(__dirname, "/pkitemplate/openssl_intermediate.cnf.tpl"),
+      path.join(
+        global.paths.basepath,
+        "src",
+        "pkitemplate",
+        "openssl_intermediate.cnf.tpl"
+      ),
       "utf8"
     );
     openssl_intermediate = openssl_intermediate.replace(
@@ -142,7 +152,12 @@ var createFileStructure = function () {
      */
     fs.ensureDirSync(path.join(pkidir, "intermediate/ocsp"));
     openssl_intermediate_ocsp = fs.readFileSync(
-      path.join(__dirname, "/pkitemplate/openssl_ocsp.cnf.tpl"),
+      path.join(
+        global.paths.basepath,
+        "src",
+        "pkitemplate",
+        "openssl_ocsp.cnf.tpl"
+      ),
       "utf8"
     );
     openssl_intermediate_ocsp = openssl_intermediate_ocsp.replace(
@@ -175,7 +190,12 @@ var createFileStructure = function () {
      */
     fs.ensureDirSync(path.join(pkidir, "apicert"));
     openssl_apicert = fs.readFileSync(
-      path.join(__dirname, "/pkitemplate/openssl_apicert.cnf.tpl"),
+      path.join(
+        global.paths.basepath,
+        "src",
+        "pkitemplate",
+        "openssl_apicert.cnf.tpl"
+      ),
       "utf8"
     );
     openssl_apicert = openssl_apicert.replace(
@@ -204,7 +224,7 @@ var createFileStructure = function () {
   });
 };
 
-var createRootCA = function () {
+const createRootCA = function () {
   log(">>> Creating Root CA");
 
   return new Promise(function (resolve, reject) {
@@ -235,7 +255,7 @@ var createRootCA = function () {
   });
 };
 
-var createIntermediateCA = function () {
+const createIntermediateCA = function () {
   log(">>> Creating Intermediate CA");
 
   return new Promise(function (resolve, reject) {
@@ -298,7 +318,7 @@ var createIntermediateCA = function () {
   });
 };
 
-var createOCSPKeys = function () {
+const createOCSPKeys = function () {
   log(">>> Creating OCSP Keys");
 
   return new Promise(function (resolve, reject) {
@@ -346,7 +366,7 @@ var createOCSPKeys = function () {
  * Creates server certificate pair for HTTP API
  * Directly form Root CA
  */
-var createAPICert = function () {
+const createAPICert = function () {
   log(">>> Creating HTTPS API certificates");
 
   return new Promise(function (resolve, reject) {
@@ -387,7 +407,7 @@ var createAPICert = function () {
 /*
  * Sets correct file permissions for CA files
  */
-var setFilePerms = function () {
+const setFilePerms = function () {
   log(">>> Setting file permissions");
 
   return new Promise(function (resolve, reject) {

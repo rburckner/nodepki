@@ -3,24 +3,24 @@
  * Utilizes AJV
  */
 
-var log = require('fancy-log');
+const log = require('fancy-log');
 
-var Ajv = require('ajv').default;
-var ajv = new Ajv({allErrors: true});
+const Ajv = require('ajv').default;
+const ajv = new Ajv({allErrors: true});
 
 
-var validator = {};
+const validator = {};
 
 validator.checkAPI = function (schema, data) {
-  var valid = ajv.validate(schema, data);
+  const valid = ajv.validate(schema, data);
 
   if (valid) {
     return {success: true};
   } else {
-    var errors = [];
+    const errors = [];
 
     ajv.errors.forEach(function (error) {
-      var message = '';
+      const message = '';
 
       switch (error.keyword) {
         case 'required':
@@ -32,7 +32,7 @@ validator.checkAPI = function (schema, data) {
         default: message = 'Unknown input error. :(';
       }
 
-      var pusherror = {
+      const pusherror = {
         message: message
       }
 

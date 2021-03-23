@@ -2,26 +2,26 @@
  * Auth module
  */
 
-var crypto = require('crypto');
-var fs = require('fs-extra');
+const crypto = require('crypto');
+const fs = require('fs-extra');
 
 
 /*
  * Checks login credentials
  * Input: Username, password (plain)
  */
-var checkUser = function (username, password) {
-  var hash = crypto.createHash('sha256').update(password).digest('base64');
+const checkUser = function (username, password) {
+  const hash = crypto.createHash('sha256').update(password).digest('base64');
 
   // Check if there is an entry with username:hash
   // ...
-  var expected = username + ':' + hash;
+  const expected = username + ':' + hash;
 
   // Read password file
-  var passfile = fs.readFileSync('data/user.db', 'utf8');
-  var lines = passfile.split('\n');
+  const passfile = fs.readFileSync('data/user.db', 'utf8');
+  const lines = passfile.split('\n');
 
-  var found = false;
+  const found = false;
   lines.forEach(function (line) {
     if (line === expected) 
       found = true;
@@ -35,20 +35,20 @@ var checkUser = function (username, password) {
 /*
  * Add a new user to DB
  */
-var addUser = function (username, password) { // Make sure DB file exists ...
+const addUser = function (username, password) { // Make sure DB file exists ...
   fs.ensureFileSync('data/user.db');
 
   // Calc passhash
-  var passhash = crypto.createHash('sha256').update(password).digest('base64');
+  const passhash = crypto.createHash('sha256').update(password).digest('base64');
 
   // Read existing file
-  var passfile = fs.readFileSync('data/user.db', 'utf8');
+  const passfile = fs.readFileSync('data/user.db', 'utf8');
 
   // Check if user alreadys exists
-  var lines = passfile.split('\n');
-  var found = false;
+  const lines = passfile.split('\n');
+  const found = false;
   lines.forEach(function (line) {
-    var line_username = line.split(':')[0];
+    const line_username = line.split(':')[0];
     if (line_username === username) 
       found = true;
     
@@ -68,20 +68,20 @@ var addUser = function (username, password) { // Make sure DB file exists ...
 /*
  * Delete user from DB
  */
-var delUser = function (username) {
+const delUser = function (username) {
   fs.ensureFileSync('data/user.db');
 
-  var passfile = fs.readFileSync('data/user.db', 'utf8');
-  var lines = passfile.split('\n');
-  var changed = false;
+  const passfile = fs.readFileSync('data/user.db', 'utf8');
+  const lines = passfile.split('\n');
+  const changed = false;
 
-  var passfile_out = '';
+  const passfile_out = '';
 
   // Re-write file without user
 
   lines.forEach(function (line) {
     if (line !== '') {
-      var line_username = line.split(':')[0];
+      const line_username = line.split(':')[0];
 
       if (line_username !== username) {
         passfile_out += line + '\n'

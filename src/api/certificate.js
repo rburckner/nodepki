@@ -5,19 +5,19 @@
  * Extend error handling!
  */
 
-var util = require('util');
-var fs = require('fs-extra');
-var exec = require('child_process').exec;
+const util = require('util');
+const fs = require('fs-extra');
+const exec = require('child_process').exec;
 
 const uuidV4 = require('uuid').v4;
-var log = require('fancy-log');
+const log = require('fancy-log');
 
-var certdb = require('../certdb.js');
-var validator = require('../validator.js');
-var authMod = require('../auth.js');
+const certdb = require('../certdb.js');
+const validator = require('../validator.js');
+const authMod = require('../auth.js');
 
-var certificate = {};
-var certificates = {};
+const certificate = {};
+const certificates = {};
 
 
 /*
@@ -29,7 +29,7 @@ function respond(res, resobj) {
 
 
 function errorresponse(error, res) {
-  var response = {
+  const response = {
     success: false,
     errors: [error]
   };
@@ -39,13 +39,13 @@ function errorresponse(error, res) {
 
 
 function wrongAPISchema(apierrors, res) {
-  var errors = []
+  const errors = []
 
   apierrors.forEach(function (apierror) {
     errors.push({code: 100, message: apierror.message});
   });
 
-  var resobj = {
+  const resobj = {
     success: false,
     errors: errors
   }
@@ -60,7 +60,7 @@ function wrongLoginCredentials(res) {
       message: 'Invalid login credentials.'
     }];
 
-  var resobj = {
+  const resobj = {
     success: false,
     errors: errors
   }
@@ -73,7 +73,7 @@ function wrongLoginCredentials(res) {
  * Request method creates certificate from .csr file
  */
 certificate.request = function (req, res) { // Validate user input
-  var schema = {
+  const schema = {
     "properties": {
       "data": {
         "type": "object",
@@ -108,14 +108,14 @@ certificate.request = function (req, res) { // Validate user input
   }
 
   // Check API conformity
-  var check = validator.checkAPI(schema, req.body)
+  const check = validator.checkAPI(schema, req.body)
   if (check.success === false) {
     wrongAPISchema(check.errors, res);
     return;
   }
 
-  var data = req.body.data;
-  var auth = req.body.auth;
+  const data = req.body.data;
+  const auth = req.body.auth;
 
   // Check access
   if (authMod.checkUser(auth.username, auth.password) === false) {
@@ -126,22 +126,22 @@ certificate.request = function (req, res) { // Validate user input
 
   log.info("Certificate request by %s ...", auth.username);
 
-  var csr = data.csr;
+  const csr = data.csr;
 
-  var lifetime = data.lifetime ? data.lifetime : global.config.cert.lifetime_default;
+  const lifetime = data.lifetime ? data.lifetime : global.config.cert.lifetime_default;
   lifetime = global.config.cert.lifetime_max >= lifetime ? lifetime : global.config.cert.lifetime_max;
 
-  var type = (data.type && data.type === 'client') ? 'usr_cert' : 'server_cert';
+  const type = (data.type && data.type === 'client') ? 'usr_cert' : 'server_cert';
   log("Certificate type: " + type);
 
   // Create temporary directory ...
-  var tempdir = global.paths.tempdir + uuidV4() + "/";
+  const tempdir = global.paths.tempdir + uuidV4() + "/";
   fs.mkdirSync(tempdir);
 
   new Promise(function (resolve, reject) { // Write .csr file to tempdir
     fs.writeFile(tempdir + 'request.csr', csr, function (err) {
       if (err === null) { // OpenSSL command template
-        var signcommand = util.format('openssl ca -batch -config %sintermediate/openssl.cnf -extensions ' + type + ' -days ' + lifetime + ' -notext -md sha256 -in request.csr -key "%s" -out cert.pem', global.paths.pkipath, global.config.ca.intermediate.passphrase);
+        const signcommand = util.format('openssl ca -batch -config %sintermediate/openssl.cnf -extensions ' + type + ' -days ' + lifetime + ' -notext -md sha256 -in request.csr -key "%s" -out cert.pem', global.paths.pkipath, global.config.ca.intermediate.passphrase);
 
         // Execute Linux Shell command
         exec(signcommand, {
@@ -197,7 +197,7 @@ certificate.request = function (req, res) { // Validate user input
 
 
 certificate.revoke = function (req, res) { // Validate user input
-  var schema = {
+  const schema = {
     "properties": {
       "data": {
         "type": "object",
@@ -226,14 +226,14 @@ certificate.revoke = function (req, res) { // Validate user input
   }
 
   // Check API conformity
-  var check = validator.checkAPI(schema, req.body)
+  const check = validator.checkAPI(schema, req.body)
   if (check.success === false) {
     wrongAPISchema(check.errors, res);
     return;
   }
 
-  var data = req.body.data;
-  var auth = req.body.auth;
+  const data = req.body.data;
+  const auth = req.body.auth;
 
   // Check access
   if (authMod.checkUser(auth.username, auth.password) === false) {
@@ -246,7 +246,7 @@ certificate.revoke = function (req, res) { // Validate user input
 
 
   // Create temporary directory ...
-  var tempdir = global.paths.tempdir + uuidV4() + "/";
+  const tempdir = global.paths.tempdir + uuidV4() + "/";
   fs.mkdirSync(tempdir);
 
   new Promise(function (resolve, reject) { // Write certificate to temporary file
@@ -254,7 +254,7 @@ certificate.revoke = function (req, res) { // Validate user input
     fs.writeFile(tempdir + 'cert.pem', data.cert, function (err) {
       if (err === null) { // Execute OpenSSL command
         log.info("Executing OpenSSL command.")
-        var revokecommand = util.format('openssl ca -config %sintermediate/openssl.cnf -revoke cert.pem -key "%s"', global.paths.pkipath, global.config.ca.intermediate.passphrase);
+        const revokecommand = util.format('openssl ca -config %sintermediate/openssl.cnf -revoke cert.pem -key "%s"', global.paths.pkipath, global.config.ca.intermediate.passphrase);
 
         exec(revokecommand, {
           cwd: tempdir
@@ -305,7 +305,7 @@ certificate.revoke = function (req, res) { // Validate user input
  * Lists all certificates
  */
 certificates.list = function (req, res) { // Validate user input
-  var schema = {
+  const schema = {
     "properties": {
       "data": {
         "type": "object",
@@ -334,14 +334,14 @@ certificates.list = function (req, res) { // Validate user input
   }
 
   // Check API conformity
-  var check = validator.checkAPI(schema, req.body)
+  const check = validator.checkAPI(schema, req.body)
   if (check.success === false) {
     wrongAPISchema(check.errors, res);
     return;
   }
 
-  var data = req.body.data;
-  var auth = req.body.auth;
+  const data = req.body.data;
+  const auth = req.body.auth;
 
   // Check access
   if (authMod.checkUser(auth.username, auth.password) === false) {
@@ -352,7 +352,7 @@ certificates.list = function (req, res) { // Validate user input
 
   log.info("Request: List all active certificates. Filter: " + data.state + ". By: " + auth.username);
 
-  var filter = '';
+  const filter = '';
 
   switch (data.state) {
     case 'all': filter = '';
@@ -371,9 +371,9 @@ certificates.list = function (req, res) { // Validate user input
   }
 
   // Get certificate DB index
-  var certindex = certdb.getIndex();
+  const certindex = certdb.getIndex();
 
-  var result = new Array();
+  const result = new Array();
 
   certindex.forEach(function (certificate) {
     if (filter == '') {
@@ -393,7 +393,7 @@ certificates.list = function (req, res) { // Validate user input
 
 
 certificate.get = function (req, res) { // Validate user input
-  var schema = {
+  const schema = {
     "properties": {
       "data": {
         "type": "object",
@@ -422,14 +422,14 @@ certificate.get = function (req, res) { // Validate user input
   }
 
   // Check API conformity
-  var check = validator.checkAPI(schema, req.body)
+  const check = validator.checkAPI(schema, req.body)
   if (check.success === false) {
     wrongAPISchema(check.errors, res);
     return;
   }
 
-  var data = req.body.data;
-  var auth = req.body.auth;
+  const data = req.body.data;
+  const auth = req.body.auth;
 
   // Check access
   if (authMod.checkUser(auth.username, auth.password) === false) {
@@ -440,7 +440,7 @@ certificate.get = function (req, res) { // Validate user input
 
   log.info("Request: Get certificate. By: " + auth.username);
 
-  var certfile = global.paths.pkipath + "intermediate/certs/" + data.serialnumber + ".pem";
+  const certfile = global.paths.pkipath + "intermediate/certs/" + data.serialnumber + ".pem";
 
   if (fs.existsSync(certfile)) {
     fs.readFile(certfile, 'utf8', function (err, certdata) {
